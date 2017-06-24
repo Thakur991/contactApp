@@ -1,0 +1,104 @@
+<html ng-app="contactApp">
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+        <script src="script/angular.min.js"></script>
+        <script src="script/contact.js"></script>
+        <link href="style/css/bootstrap.css" rel="stylesheet"/>
+        <link href="style/css/app.css" rel="stylesheet"/>
+    </head>
+    <div class="hbox hbox-auto-xs hbox-auto-sm bg-light" ng-controller="ContactCtrl">
+      <!-- column -->
+      <div class="col w-lg lter b-r">
+        <div class="vbox">
+          <div class="wrapper-xs b-b">
+            <div class="input-group m-b-xxs">
+              <span class="input-group-addon input-sm no-border no-bg"><i class="glyphicon glyphicon-search text-md m-t-xxs"></i></span>
+              <input type="text" class="form-control input-sm no-border no-bg text-md" placeholder="Search" ng-model="query">
+            </div>
+          </div>
+          <div class="row-row">
+            <div class="cell scrollable hover">
+              <div class="cell-inner">
+                <div class="m-t-n-xxs">
+                  <div class="list-group list-group-md no-radius no-border  m-b-none">
+                    <a ng-repeat="item in items | filter:query | orderBy:'firstName'" class="list-group-item m-l" ng-class="{'focus m-n' : item.selected}" ng-click="selectItem(item)">
+                  <span class="block text-ellipsis m-l-n text-sm">
+                    <img src="style/images/a3.jpg" class="img-circle thumb-xs">
+                    {{ item.firstName }} <strong>{{ item.lastName }}</strong>
+                    <span ng-hide="item.firstName || item.lastName">No Name</span>
+                  </span>
+                    </a>
+                  </div>
+                </div>
+                <div class="text-center pos-abt w-full" style="top:50%;" ng-hide="(items | filter:query).length">No Contacts</div>
+              </div>
+            </div>
+          </div>
+          <div class="wrapper b-t text-center">
+            <a href class="btn btn-sm btn-primary btn-addon" ng-click="createItem()"><i class="glyphicon glyphicon-plus m-r-xs"></i> New Contact</a>
+          </div>
+        </div>
+      </div>
+      <!-- /column -->
+      <div class="col bg-white-only">
+        <div class="vbox">
+          <div class="wrapper-sm b-b">
+            <div class="m-t-n-xxs m-b-n-xxs m-l-xs">
+              <a class="btn btn-xs btn-danger pull-right" ng-hide="!item" ng-click="deleteItem(item)">Delete</a>
+              <a class="btn btn-xs btn-primary" ng-hide="item.editing" ng-click="editItem(item)">Edit</a>
+              <a class="btn btn-xs btn-success" ng-show="item.editing" ng-click="doneEditing(item)">Done</a>
+            </div>
+          </div>
+          <div class="row-row">
+            <div class="cell">
+              <div class="cell-inner">
+                <div class="wrapper-sm">
+                  <div class="hbox h-auto m-b-sm">
+                    <div class="col text-center w-sm">
+                      <div class="thumb-lg avatar inline">
+                        <img src="style/images/a3.jpg">
+                      </div>
+                    </div>
+                    <form name="NameValid">
+                    <div class="col v-middle h2 font-thin">
+                      <div ng-hide="item.editing">{{item.firstName}} {{item.lastName}}</div>
+                    </div>
+                      <div ng-show="item.editing">
+                        <input type="text" placeholder="FirstName" name="FirstName"  ng-maxlength="8" class="form-control w-auto input-lg m-b-n-xxs font-bold" ng-model="item.firstName" >
+                        <span ng-show="NameValid.FirstName.$dirty &&  NameValid.FirstName.$error.maxlength">To Long!!!</span>
+                        <input type="text" placeholder="LastName" name="LastName"  ng-maxlength="8" class="form-control w-auto input-lg font-bold" ng-model="item.lastName" >
+                        <span ng-show="NameValid.LastName.$dirty &&  NameValid.LastName.$error.maxlength">To long!!!</span>
+                      </div>
+                    </form>
+                  </div>
+                  <!-- fields -->
+                  <form name="formValid">
+                  <div class="form-horizontal" >
+                    <div class="form-group m-b-xs" ng-hide="!item.contactNumber && !item.editing">
+                      <label class="col-xs-3 control-label">contactNumber</label>
+                      <div class="col-xs-9">
+                        <p class="form-control-static" ng-hide="item.editing">{{item.contactNumber}}</p>
+                        <input type="text" name="number" class="form-control" ng-show="item.editing" ng-pattern="/^\+?\d{3}-?\d{3}-?\d{4}/" ng-minlength="10" ng-model="item.contactNumber" >
+                        <span ng-show="formValid.number.$dirty &&  formValid.number.$error.minlength">To short!</span>
+                        <span class="error" ng-show="formValid.number.$error.pattern">Please match pattern [444-036-8658]</span>
+                      </div>
+                    </div>
+                    <div class="form-group m-b-sm" ng-hide="!item.contactEmail && !item.editing">
+                      <label class="col-xs-3 control-label">contactEmail</label>
+                      <div class="col-xs-9">
+                        <p class="form-control-static" ng-hide="item.editing">{{item.contactEmail}}</p>
+                        <input type="email" name="email" class="form-control" ng-show="item.editing" ng-model="item.contactEmail">
+                        <span ng-show="formValid.email.$dirty && formValid.email.$error.email">Invalid E-mail</span>
+                      </div>
+                    </div>
+                  </div>
+                  </form>
+                  <!-- / fields -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</html>
